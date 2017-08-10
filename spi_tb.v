@@ -1,9 +1,10 @@
-module spi_tb(input clk, input rst);
+module spi_tb(input clk, input rst, input cs, input rd, input wr,
+  input [7:0] din, output [7:0] dout, output miso, output mosi,
+  output sclk, output done, output [7:0] prev_input, output [7:0] prev_output);
+
   defparam dut.DWIDTH = 8;
 
-  wire cs = 0;
-  wire rd = 0;
-  wire wr = 0;
+
   wire [7:0] din;
   wire [7:0] dout;
   wire miso;
@@ -38,7 +39,7 @@ module spi_tb(input clk, input rst);
     .data(shreg_data),
   );
   
-  always @* begin
+  always @(posedge clk) begin
     if (~rd & wr & cs) begin
         prev_input <= din;
         prev_output <= shreg_data;

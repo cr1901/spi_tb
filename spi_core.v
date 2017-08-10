@@ -2,7 +2,6 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     output [DWIDTH-1:0] dout, input miso, output mosi, output sclk, output done);
     
     parameter DWIDTH = 8;
-    reg [DWIDTH-1:0] din;
     reg [DWIDTH-1:0] dout;
     reg done;
     
