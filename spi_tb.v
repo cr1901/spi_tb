@@ -9,6 +9,10 @@ module spi_tb(input clk, input rst);
   wire miso;
   wire mosi;
   wire sclk;
+  wire done;
+  
+
+  reg [7:0] prev_input;
 
   spi_core dut (
     .clk(clk),
@@ -20,7 +24,8 @@ module spi_tb(input clk, input rst);
     .dout(dout),
     .miso(miso),
     .mosi(mosi),
-    .sclk(sclk)
+    .sclk(sclk),
+    .done(done)
   );
   
   spi_shreg #(8) spi_sec(
@@ -30,7 +35,20 @@ module spi_tb(input clk, input rst);
     .miso(miso),
   );
   
-  assume property (!(rd == 1) && (wr == 1));
+  always @* begin
+    if (~rd & wr & cs) begin
+        prev_input <= din;
+        prev_output <= spi_shreg.data;
+    end
+  end
+  
+  assume property (!((rd == 1) && (wr == 1)));
+  
+  always @* begin
+    if (done) begin
+      assert(prev_input == spi_shreg.data);
+    end
+  end
 
 endmodule
 
@@ -50,7 +68,7 @@ module spi_shreg(input sclk, input cs, input mosi, output reg miso);
     always @(negedge sclk) begin
         if (~cs) begin
             miso <= data[DWIDTH - 1];
-            data <= { data[6:0], tmp_bit};
+            data <= { data[6:0], tmp_bit };
         end
     end
 endmodule
