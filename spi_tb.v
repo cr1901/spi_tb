@@ -13,7 +13,9 @@ module spi_tb(input clk, input rst);
   
 
   reg [7:0] prev_input;
-
+  reg [7:0] prev_output;
+  wire [7:0] shreg_data;
+  
   spi_core dut (
     .clk(clk),
     .rst(rst),
@@ -33,27 +35,31 @@ module spi_tb(input clk, input rst);
     .cs(1'b0),
     .mosi(mosi),
     .miso(miso),
+    .data(shreg_data),
   );
   
   always @* begin
     if (~rd & wr & cs) begin
         prev_input <= din;
-        prev_output <= spi_shreg.data;
+        prev_output <= shreg_data;
     end
   end
   
+  // Assume well-behaved upstream
   assume property (!((rd == 1) && (wr == 1)));
   
   always @* begin
     if (done) begin
-      assert(prev_input == spi_shreg.data);
+      assert(prev_input == shreg_data);
+      assert(prev_output == dout);
     end
   end
 
 endmodule
 
 
-module spi_shreg(input sclk, input cs, input mosi, output reg miso);
+module spi_shreg(input sclk, input cs, input mosi, output reg miso,
+  output [DWIDTH - 1:0] data);
     parameter DWIDTH = 8;
 
     reg tmp_bit;
