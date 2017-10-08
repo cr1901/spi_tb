@@ -20,6 +20,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     assign sclk_posedge = (~prev_sclk & sclk);
     
     initial prev_xfer_prog = 0;
+    initial xfer_in_progress = 0;
     
     // CPOL = 0, CPHA = 1
     always @(posedge clk) begin
