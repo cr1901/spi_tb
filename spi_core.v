@@ -49,6 +49,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         end
         
         if (prev_xfer_prog & ~xfer_in_progress) begin
+            dout <= tmp_dat;
             done <= 1;
         end
         
