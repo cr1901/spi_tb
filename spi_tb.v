@@ -48,6 +48,8 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
   
   // Assume well-behaved upstream
   assume property (!((rd == 1) && (wr == 1)));
+  initial assume (wr == 1);
+  initial assume (cs == 1);
   initial assume (done == 0);
   
   always @* begin
