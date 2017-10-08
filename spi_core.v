@@ -6,6 +6,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     reg done;
     
     reg [DWIDTH-1:0] tmp_dat;
+    reg [$clog2(DWIDTH):0] edge_cnt;
     reg [2:0] sclk_div;
     reg xfer_in_progress;
     reg prev_xfer_prog;
@@ -26,6 +27,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
             if(sclk_div == 0) begin
                 sclk <= ~sclk;
                 sclk_div <= 4;
+                edge_cnt <= edge_cnt - 1;
             end else begin
                 sclk_div <= sclk_div - 1;
             end
@@ -34,6 +36,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         sclk_div <= 4;
         sclk <= 0;
         prev_sclk <= sclk;
+        edge_cnt <= 2*DWIDTH;
     end
     
     
@@ -54,6 +57,10 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         
         if (sclk_negedge) begin
             tmp_dat <= { tmp_dat[DWIDTH - 2:0], tmp_in };
+        end
+        
+        if(edge_cnt == 0) begin
+            xfer_in_progress <= 0;
         end
     end
     
