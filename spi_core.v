@@ -3,7 +3,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     
     parameter DWIDTH = 8;
     reg [DWIDTH-1:0] dout;
-    reg done;
+    
     
     reg [DWIDTH-1:0] tmp_dat;
     reg [$clog2(DWIDTH):0] edge_cnt;
@@ -14,6 +14,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     reg tmp_in;
     
     wire sclk_negedge, sclk_posedge;
+    wire done;
     
     assign mosi = tmp_dat[DWIDTH - 1];
     assign sclk_negedge = (prev_sclk & ~sclk);
@@ -21,6 +22,15 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     
     initial prev_xfer_prog = 0;
     initial xfer_in_progress = 0;
+    
+    
+    always @* begin
+        if (prev_xfer_prog == 0 && xfer_in_progress == 0) begin
+            done <= 1;
+        end else begin
+            done <= 0;
+        end
+    end
     
     // CPOL = 0, CPHA = 1
     always @(posedge clk) begin
@@ -45,12 +55,12 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         if(wr & ~rd & cs & ~xfer_in_progress) begin
             tmp_dat <= din;
             xfer_in_progress <= 1;
-            done <= 0;
+            //done <= 0;
         end
         
         if (prev_xfer_prog & ~xfer_in_progress) begin
             dout <= tmp_dat;
-            done <= 1;
+            //done <= 1;
         end
         
         if (sclk_posedge) begin
@@ -65,7 +75,6 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
             xfer_in_progress <= 0;
         end
     end
-    
     
     
     always @(posedge clk) begin
