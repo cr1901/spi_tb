@@ -18,6 +18,8 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     assign sclk_negedge = (prev_sclk & ~sclk);
     assign sclk_posedge = (~prev_sclk & sclk);
     
+    initial prev_xfer_prog = 0;
+    
     // CPOL = 0, CPHA = 1
     always @(posedge clk) begin
         if(xfer_in_progress) begin
