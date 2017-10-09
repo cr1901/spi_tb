@@ -36,7 +36,7 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
     .cs(1'b0),
     .mosi(mosi),
     .miso(miso),
-    .data(shreg_data),
+    .data(shreg_data)
   );
   
   always @(posedge clk) begin
@@ -47,19 +47,21 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
   end
   
   // Assume well-behaved upstream
-  assume property (!((rd == 1) && (wr == 1)));
-  assume property (!((cs == 1) && (wr == 1) && (done == 0)));
-  
-  initial assume (wr == 1);
-  initial assume (cs == 1);
-  initial assume (done == 0);
-  
-  always @* begin
-    if (done) begin
-      assert(prev_input == shreg_data);
-      assert(prev_output == dout);
-    end
+`ifdef FORMAL
+    assume property (!((rd == 1) && (wr == 1)));
+    assume property (!((cs == 1) && (wr == 1) && (done == 0)));
+
+    initial assume (wr == 1);
+    initial assume (cs == 1);
+    initial assume (done == 0);
+
+    always @* begin
+      if (done) begin
+        assert(prev_input == shreg_data);
+        assert(prev_output == dout);
+      end
   end
+`endif
 
 endmodule
 
@@ -80,7 +82,7 @@ module spi_shreg(input sclk, input cs, input mosi, output reg miso,
     always @(negedge sclk) begin
         if (~cs) begin
             miso <= data[DWIDTH - 1];
-            data <= { data[6:0], tmp_bit };
+            data[DWIDTH - 1:0] <= { data[DWIDTH - 2:0], tmp_bit };
         end
     end
 endmodule

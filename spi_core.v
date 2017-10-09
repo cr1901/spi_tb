@@ -3,7 +3,8 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     
     parameter DWIDTH = 8;
     reg [DWIDTH-1:0] dout;
-    
+    reg done;
+    reg sclk;
     
     reg [DWIDTH-1:0] tmp_dat;
     reg [$clog2(DWIDTH):0] edge_cnt;
@@ -14,7 +15,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     reg tmp_in;
     
     wire sclk_negedge, sclk_posedge;
-    wire done;
+
     
     assign mosi = tmp_dat[DWIDTH - 1];
     assign sclk_negedge = (prev_sclk & ~sclk);
@@ -68,7 +69,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         end
         
         if (sclk_negedge) begin
-            tmp_dat <= { tmp_dat[DWIDTH - 2:0], tmp_in };
+             tmp_dat <= { tmp_dat[DWIDTH - 2:0], tmp_in };
         end
         
         if(edge_cnt == 0) begin
