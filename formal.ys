@@ -1,4 +1,5 @@
 read_verilog -formal spi_tb.v
 read_verilog spi_core.v
 prep -top spi_tb -nordff
+clk2fflogic; opt clean
 write_smt2 -wires spi_tb.smt2
