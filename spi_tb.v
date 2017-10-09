@@ -81,6 +81,10 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
   wire sclk;
   wire done;
   
+  reg reg_wr;
+  reg reg_rd;
+  reg reg_cs;
+
 
   reg [7:0] prev_input;
   reg [7:0] prev_output;
@@ -89,9 +93,9 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
   spi_core dut (
     .clk(clk),
     .rst(rst),
-    .cs(cs),
-    .rd(rd),
-    .wr(wr),
+    .cs(reg_cs),
+    .rd(reg_rd),
+    .wr(reg_wr),
     .din(din),
     .dout(dout),
     .miso(miso),
@@ -109,10 +113,14 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
   );
   
   always @(posedge clk) begin
-    if (~rd & wr & cs) begin
+    if (~reg_rd & reg_wr & reg_cs) begin
         prev_input <= din;
         prev_output <= shreg_data;
     end
+
+    reg_rd <= rd;
+    reg_wr <= wr;
+    reg_cs <= cs;
   end
   
   // Assume well-behaved upstream
