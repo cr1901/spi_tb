@@ -47,9 +47,10 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         end else begin
             sclk_div <= 4;
             sclk <= 0;
-            prev_sclk <= sclk;
             edge_cnt <= 2*DWIDTH - 1;
         end
+
+        prev_sclk <= sclk;
     end
     
     
