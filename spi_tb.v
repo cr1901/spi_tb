@@ -1,3 +1,72 @@
+`ifdef __ICARUS__
+`timescale 1ns/1ps
+
+module spi_sim();
+    reg sys_clk;
+    reg sys_rst;
+    reg cs;
+    reg rd;
+    reg wr;
+    reg [7:0] din;
+    wire [7:0] dout;
+    wire miso;
+    wire mosi;
+    wire sclk;
+    wire done;
+    wire [7:0] prev_input;
+    wire [7:0] prev_output;
+
+    // clock
+    initial sys_clk = 1'b0;
+    always #15.625 sys_clk = ~sys_clk;
+
+    // reset
+    initial begin
+      sys_rst = 1'b1;
+      rd = 1'b0;
+      #20
+      sys_rst = 1'b0;
+      #20
+      din = 8'b10101010;
+      cs = 1'b1;
+      wr = 1'b1;
+      #20
+      cs = 1'b0;
+      wr = 1'b0;
+    end
+
+    spi_tb sim_dut(
+      .clk(sys_clk),
+      .rst(sys_rst),
+      .cs(cs),
+      .rd(rd),
+      .wr(wr),
+      .din(din),
+      .dout(dout),
+      .miso(miso),
+      .mosi(mosi),
+      .sclk(sclk),
+      .done(done),
+      .prev_input(prev_input),
+      .prev_output(prev_output)
+    );
+
+    initial begin
+        $dumpfile("spi_sim.vcd");
+        $dumpvars(0, sim_dut);
+    end
+
+    always @ (posedge sys_clk)
+    begin
+        if($time > 1000) begin
+            $finish;
+        end
+    end
+
+endmodule
+`endif
+
+
 module spi_tb(input clk, input rst, input cs, input rd, input wr,
   input [7:0] din, output [7:0] dout, output miso, output mosi,
   output sclk, output done, output [7:0] prev_input, output [7:0] prev_output);
