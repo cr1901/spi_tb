@@ -62,12 +62,10 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         if(wr & ~rd & cs & ~xfer_in_progress) begin
             tmp_dat <= din;
             xfer_in_progress <= 1;
-            //done <= 0;
         end
         
         if (prev_xfer_prog & ~xfer_in_progress) begin
             dout <= tmp_dat;
-            //done <= 1;
         end
         
         if (sclk_posedge) begin
