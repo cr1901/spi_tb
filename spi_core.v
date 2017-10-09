@@ -53,6 +53,10 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     
     
     always @(posedge clk) begin
+        if(edge_cnt == 0) begin
+            xfer_in_progress <= 0;
+        end
+
         if(wr & ~rd & cs & ~xfer_in_progress) begin
             tmp_dat <= din;
             xfer_in_progress <= 1;
@@ -70,10 +74,6 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         
         if (sclk_negedge) begin
              tmp_dat <= { tmp_dat[DWIDTH - 2:0], tmp_in };
-        end
-        
-        if(edge_cnt == 0) begin
-            xfer_in_progress <= 0;
         end
     end
     
