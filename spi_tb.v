@@ -141,6 +141,8 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
         assume(sclk == 0);
       end
     end
+
+    always @(posedge $global_clock) assume(clk == ~$past(clk));
 `endif
 
 endmodule
