@@ -7,7 +7,7 @@ check: $(PROJECT).smt2
 sim: spi_sim.vvp
 	vvp spi_sim.vvp
 	
-spi_sim.vvp: $(PROJECT).v
+spi_sim.vvp: spi_core.v $(PROJECT).v
 	iverilog -o spi_sim.vvp spi_core.v spi_tb.v
 	
 $(PROJECT).smt2: spi_core.v $(PROJECT).v

@@ -122,14 +122,16 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
 
     initial assume (wr == 1);
     initial assume (cs == 1);
-    initial assume (done == 0);
+    initial assume (done == 1);
+    initial assume (prev_input == shreg_data);
+    initial assume (prev_output == dout);
 
     always @* begin
       if (done) begin
         assert(prev_input == shreg_data);
         assert(prev_output == dout);
       end
-  end
+    end
 `endif
 
 endmodule
