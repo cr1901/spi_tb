@@ -138,6 +138,7 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
       if (done) begin
         assert(prev_input == shreg_data);
         assert(prev_output == dout);
+        assume(sclk == 0);
       end
     end
 `endif
