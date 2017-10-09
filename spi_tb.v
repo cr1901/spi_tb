@@ -81,7 +81,12 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
       end
     end
 
-    always @(posedge $global_clock) assume(clk == ~$past(clk));
+    reg last_clk = 0;
+
+    always @($global_clock) begin
+        last_clk <= clk;
+        assume(last_clk != clk);
+    end
 `endif
 
 endmodule
