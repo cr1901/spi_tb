@@ -58,7 +58,7 @@ module spi_sim();
 
     always @ (posedge sys_clk)
     begin
-        if($time > 1000) begin
+        if($time > 3000) begin
             $finish;
         end
     end
