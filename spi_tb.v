@@ -91,6 +91,8 @@ module spi_shreg(input sclk, input cs, input mosi, output reg miso,
     reg tmp_bit;
     reg [DWIDTH - 1:0] data;
 
+    assign miso = data[DWIDTH - 1];
+
     always @(posedge sclk) begin
         if (~cs) begin
             tmp_bit <= mosi;
@@ -99,7 +101,6 @@ module spi_shreg(input sclk, input cs, input mosi, output reg miso,
 
     always @(negedge sclk) begin
         if (~cs) begin
-            miso <= data[DWIDTH - 1];
             data[DWIDTH - 1:0] <= { data[DWIDTH - 2:0], tmp_bit };
         end
     end
