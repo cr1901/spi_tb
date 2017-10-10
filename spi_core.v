@@ -1,11 +1,11 @@
 module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDTH-1:0] din,
     output [DWIDTH-1:0] dout, input miso, output mosi, output sclk, output done);
-    
+
     parameter DWIDTH = 8;
     reg [DWIDTH-1:0] dout;
     reg done;
     reg sclk;
-    
+
     reg [DWIDTH-1:0] tmp_dat;
     reg [$clog2(DWIDTH):0] edge_cnt;
     reg [2:0] sclk_div;
@@ -13,19 +13,21 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     reg prev_xfer_prog;
     reg prev_sclk;
     reg tmp_in;
-    
+
     wire sclk_negedge, sclk_posedge;
 
-    
+
     assign mosi = tmp_dat[DWIDTH - 1];
     assign sclk_negedge = (prev_sclk & ~sclk);
     assign sclk_posedge = (~prev_sclk & sclk);
-    
+
     initial sclk = 0;
+    initial prev_sclk = 0;
     initial prev_xfer_prog = 0;
     initial xfer_in_progress = 0;
-    
-    
+
+
+
     always @* begin
         if (prev_xfer_prog == 0 && xfer_in_progress == 0) begin
             done <= 1;
@@ -33,7 +35,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
             done <= 0;
         end
     end
-    
+
     // CPOL = 0, CPHA = 1
     always @(posedge clk) begin
         if(xfer_in_progress) begin
@@ -52,8 +54,8 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
 
         prev_sclk <= sclk;
     end
-    
-    
+
+
     always @(posedge clk) begin
         if(edge_cnt == 0) begin
             xfer_in_progress <= 0;
@@ -63,21 +65,21 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
             tmp_dat <= din;
             xfer_in_progress <= 1;
         end
-        
+
         if (prev_xfer_prog & ~xfer_in_progress) begin
             dout <= tmp_dat;
         end
-        
+
         if (sclk_posedge) begin
             tmp_in <= miso;
         end
-        
+
         if (sclk_negedge) begin
              tmp_dat <= { tmp_dat[DWIDTH - 2:0], tmp_in };
         end
     end
-    
-    
+
+
     always @(posedge clk) begin
         prev_xfer_prog <= xfer_in_progress;
     end
