@@ -17,3 +17,14 @@ The above properties hold for all time under the following conditions:
 To aid in proving correctness (the main reason for writing this core), the core is very limited in scope. In particular:
 * Verilog `initial` statements are used to initialize values (meaning this core only works on FPGA).
 * Only CPOL=0, CPHA=0 operation is supported.
+
+## Instructions
+To run the formal verification flow, run 'make'; the default rule will prepare the Verilog code into an [input format]
+(http://smtlib.cs.uiowa.edu/language.shtml) suitable for SMT solvers, and then run `yosys-smtbmc` a `python3` script which 
+will annotate the output SMTv2 from the previous step, and then invoke the SMT solver. The SMT solver will then
+attempt to prove the assertions in the original Verilog code.
+
+## Prerequisites
+* [yosys](https://github.com/cliffordwolf/yosys)
+* `python3` for `yosys-smtbmc`
+* A SAT solver, I default to [z3](https://github.com/Z3Prover/z3)
