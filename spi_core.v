@@ -84,4 +84,8 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         prev_xfer_prog <= xfer_in_progress;
     end
 
+`ifdef FORMAL
+    assume property (edge_cnt <= 16);
+`endif
+
 endmodule
