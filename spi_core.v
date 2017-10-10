@@ -36,7 +36,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         end
     end
 
-    // CPOL = 0, CPHA = 1
+    // CPOL = 0, CPHA = 0
     always @(posedge clk) begin
         if(xfer_in_progress) begin
             if(sclk_div == 0) begin
