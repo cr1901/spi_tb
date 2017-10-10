@@ -11,22 +11,18 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
   wire mosi;
   wire sclk;
   wire done;
-  
-  reg reg_wr;
-  reg reg_rd;
-  reg reg_cs;
 
 
   reg [7:0] prev_input;
   reg [7:0] prev_output;
   wire [7:0] shreg_data;
-  
+
   spi_core dut (
     .clk(clk),
     .rst(rst),
-    .cs(reg_cs),
-    .rd(reg_rd),
-    .wr(reg_wr),
+    .cs(cs),
+    .rd(rd),
+    .wr(wr),
     .din(din),
     .dout(dout),
     .miso(miso),
@@ -34,7 +30,7 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
     .sclk(sclk),
     .done(done)
   );
-  
+
   spi_shreg #(8) spi_sec(
     .sclk(sclk),
     .cs(1'b0),
@@ -42,20 +38,16 @@ module spi_tb(input clk, input rst, input cs, input rd, input wr,
     .miso(miso),
     .data(shreg_data)
   );
-  
+
   // When an xfer starts, save the previous input/output for
   // comparison purposes.
   always @(posedge clk) begin
-    if (~reg_rd & reg_wr & reg_cs) begin
+    if (~rd & wr & cs) begin
         prev_input <= din;
         prev_output <= shreg_data;
     end
-
-    reg_rd <= rd;
-    reg_wr <= wr;
-    reg_cs <= cs;
   end
-  
+
 
 `ifdef FORMAL
     // Assume well-behaved upstream- whatever's connected to the SPI
@@ -98,13 +90,13 @@ module spi_shreg(input sclk, input cs, input mosi, output reg miso,
 
     reg tmp_bit;
     reg [DWIDTH - 1:0] data;
-    
+
     always @(posedge sclk) begin
         if (~cs) begin
             tmp_bit <= mosi;
         end
     end
-    
+
     always @(negedge sclk) begin
         if (~cs) begin
             miso <= data[DWIDTH - 1];
