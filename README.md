@@ -26,4 +26,4 @@ attempt to prove the assertions in the original Verilog code.
 ## Prerequisites
 * [yosys](https://github.com/cliffordwolf/yosys)
 * `python3` for `yosys-smtbmc`
-* A SAT solver, I default to [z3](https://github.com/Z3Prover/z3)
+* An SMT solver, I default to [z3](https://github.com/Z3Prover/z3)
