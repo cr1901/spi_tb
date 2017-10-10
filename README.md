@@ -1,6 +1,6 @@
 # Formally-Verified SPI Core
 
-This repository implements an SPI core (CPOL=0, CPHA=1) that has been formally verified with respect to a reference design.
+This repository implements an SPI core (CPOL=0, CPHA=0) that has been formally verified with respect to a reference design.
 
 ## Model/"Spec"
 The SPI Core has been verified with respect to a dummy SPI secondary with 8 bit transfers, whose sole purpose is to echo its input.
