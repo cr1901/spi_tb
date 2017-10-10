@@ -7,7 +7,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
     reg sclk;
 
     reg [DWIDTH-1:0] tmp_dat;
-    reg [$clog2(DWIDTH):0] edge_cnt;
+    reg [$clog2(DWIDTH) + 1:0] edge_cnt;
     reg [2:0] sclk_div;
     reg xfer_in_progress;
     reg prev_xfer_prog;
@@ -49,7 +49,7 @@ module spi_core(input clk, input rst, input cs, input rd, input wr, input [DWIDT
         end else begin
             sclk_div <= 4;
             sclk <= 0;
-            edge_cnt <= 2*DWIDTH - 1;
+            edge_cnt <= 2*DWIDTH;
         end
 
         prev_sclk <= sclk;
