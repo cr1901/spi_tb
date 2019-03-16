@@ -21,9 +21,14 @@ To aid in proving correctness (the main reason for writing this core), the core 
 * Only CPOL=0, CPHA=0 operation is supported.
 
 ## Instructions
+### Manual `yosys-smtbmc` Flow
 To run the formal verification flow, run `make`; the default rule will prepare the Verilog code into an [input format](http://smtlib.cs.uiowa.edu/language.shtml) suitable for SMT solvers, and then run `yosys-smtbmc` a `python3` script which
 will annotate the output SMTv2 from the previous step, and then invoke the SMT solver. The SMT solver will then
 attempt to prove the assertions in the original Verilog code.
+
+### SymbiYosys Flow
+If you have [SymbiYosys](https://github.com/YosysHQ/SymbiYosys) installed, run `make sby` to start the SymbiYosys flow using `yices2`.
+The results should be equivalent to the manual flow. Run `make clean-sby` to remove the `build-sby` work directory.
 
 ## Prerequisites
 * [yosys](https://github.com/cliffordwolf/yosys)

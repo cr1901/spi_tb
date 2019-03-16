@@ -1,0 +1,17 @@
+[options]
+mode prove
+depth 180
+wait on
+
+[engines]
+smtbmc yices
+
+[script]
+read_verilog -formal spi_tb.v
+read_verilog -formal spi_core.v
+prep -top spi_tb -nordff
+clk2fflogic; opt_clean
+
+[files]
+spi_tb.v spi_tb.v
+spi_core.v spi_core.v
