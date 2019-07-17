@@ -4,7 +4,7 @@ depth 180
 wait on
 
 [engines]
-smtbmc yices
+smtbmc --dumpsmt2 yices
 
 [script]
 read_verilog -formal spi_tb.v
@@ -13,5 +13,5 @@ prep -top spi_tb -nordff
 clk2fflogic; opt_clean
 
 [files]
-spi_tb.v spi_tb.v
-spi_core.v spi_core.v
+spi_tb.v
+spi_core.v
