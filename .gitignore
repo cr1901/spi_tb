@@ -1,0 +1,7 @@
+build-sby/
+build-smtbmc/*
+!build-smtbmc/README.md
+*.gtkw
+*.vcd
+show.dot
+show.png
